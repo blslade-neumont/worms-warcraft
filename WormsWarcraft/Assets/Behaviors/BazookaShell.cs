@@ -6,13 +6,19 @@ using UnityEngine.Networking;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BazookaShell : NetworkBehaviour
 {
-    public GameObject ignoreCollision;
+    [SerializeField] [SyncVar] public NetworkInstanceId spawnedBy;
+    [SerializeField] [SyncVar] public Vector3 initialVelocity;
 
     private new Rigidbody2D rigidbody2D;
-
-    private void Start()
+    
+    public override void OnStartClient()
     {
-        this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+        Debug.Log("Ignoring physics collision");
+        GameObject obj = ClientScene.FindLocalObject(this.spawnedBy);
+        Physics2D.IgnoreCollision(GetComponent<Collider2D>(), obj.GetComponent<Collider2D>());
+
+        if (this.rigidbody2D == null) this.rigidbody2D = this.GetComponent<Rigidbody2D>();
+        this.rigidbody2D.velocity = initialVelocity;
     }
 
     private void Update()
@@ -24,7 +30,6 @@ public class BazookaShell : NetworkBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!this.isServer) return;
-        if (collision.gameObject == this.ignoreCollision) return;
 
         var combat = collision.gameObject.GetComponent<Combat>();
         combat.TakeDamage(30, this.gameObject);

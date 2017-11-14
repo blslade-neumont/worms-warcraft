@@ -55,7 +55,6 @@ public class PlayerAvatar : NetworkBehaviour
         this.isAlive = false;
         var hud = this.playerHud;
         if (hud == null || !hud.isLocalPlayer || !this.isSelected) return;
-        this.GetComponent<Combat>().OnKill();
         hud.SelectNextAliveAvatar();
     }
 
@@ -92,10 +91,11 @@ public class PlayerAvatar : NetworkBehaviour
             this.transform.position,
             Quaternion.Euler(0, 0, (Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg))
         );
-        NetworkServer.Spawn(bazookaShellGobj);
         bazookaShellGobj.GetComponent<Rigidbody2D>().velocity = forward * 4;
-        Physics2D.IgnoreCollision(this.GetComponent<Collider2D>(), bazookaShellGobj.GetComponent<Collider2D>());
-        bazookaShellGobj.GetComponent<BazookaShell>().ignoreCollision = this.gameObject;
+        var bazookaShell = bazookaShellGobj.GetComponent<BazookaShell>();
+        bazookaShell.spawnedBy = this.netId;
+        bazookaShell.initialVelocity = forward * 4;
         Destroy(bazookaShellGobj, 2.0f);
+        NetworkServer.Spawn(bazookaShellGobj);
     }
 }

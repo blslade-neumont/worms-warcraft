@@ -22,7 +22,7 @@ public class Combat : NetworkBehaviour
         return true;
     }
 
-    public void OnKill()
+    protected void OnKill()
     {
         var kill = this.Kill;
         if (kill != null) kill(this, EventArgs.Empty);

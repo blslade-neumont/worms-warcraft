@@ -11,15 +11,10 @@ public class DestroyWhenKilled : MonoBehaviour
     private void Start()
     {
         if (this.combat == null) this.combat = this.GetComponent<Combat>();
-        this.combat.Kill += Combat_Kill;
     }
 
-    private void OnDestroy()
+    private void Update()
     {
-        this.combat.Kill -= Combat_Kill;
-    }
-    private void Combat_Kill(object sender, EventArgs e)
-    {
-        Destroy(this.gameObject);
+        if (this.combat.health <= 0) Destroy(this.gameObject);
     }
 }
