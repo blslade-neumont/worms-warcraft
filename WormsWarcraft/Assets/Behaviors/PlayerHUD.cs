@@ -58,11 +58,11 @@ public class PlayerHUD : NetworkBehaviour
         if (Input.GetButtonDown("NextAvatar"))
         {
             var reverse = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
-            this.selectNextAliveAvatar(reverse ? -1 : 1);
+            this.SelectNextAliveAvatar(reverse ? -1 : 1);
         }
     }
 
-    private bool selectNextAliveAvatar(int direction = 1)
+    public bool SelectNextAliveAvatar(int direction = 1)
     {
         if (this.avatars.Length == 0) return false;
         var nextAvatar = this.selectedAvatar;

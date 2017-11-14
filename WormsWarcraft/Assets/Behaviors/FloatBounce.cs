@@ -21,7 +21,7 @@ public class FloatBounce : MonoBehaviour
             return this.avatarPointer.hudGobj.GetComponent<PlayerHUD>();
         }
     }
-    
+
     void Update()
     {
         var hud = this.playerHud;
