@@ -13,7 +13,6 @@ public class BazookaShell : NetworkBehaviour
     
     public override void OnStartClient()
     {
-        Debug.Log("Ignoring physics collision");
         GameObject obj = ClientScene.FindLocalObject(this.spawnedBy);
         Physics2D.IgnoreCollision(GetComponent<Collider2D>(), obj.GetComponent<Collider2D>());
 
@@ -32,7 +31,7 @@ public class BazookaShell : NetworkBehaviour
         if (!this.isServer) return;
 
         var combat = collision.gameObject.GetComponent<Combat>();
-        combat.TakeDamage(30, this.gameObject);
+        if (combat != null) combat.TakeDamage(30, this.gameObject);
         Destroy(this.gameObject);
     }
 }

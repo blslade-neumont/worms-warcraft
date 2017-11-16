@@ -9,6 +9,7 @@ public class PlayerAvatar : NetworkBehaviour
 {
     [SerializeField] private float moveSpeed = 4;
     [SerializeField] private float fireDelay = .5f;
+    [SerializeField] public Transform projectileStartTransform;
 
     [SerializeField] [SyncVar] public int index = -1;
     [SerializeField] [SyncVar] public GameObject hudGobj;
@@ -88,14 +89,14 @@ public class PlayerAvatar : NetworkBehaviour
         var forward = (new Vector3(target.x, target.y, 0) - this.transform.position).normalized;
         var bazookaShellGobj = Instantiate(
             this.bazookaShellPrefab,
-            this.transform.position,
+            this.projectileStartTransform.position,
             Quaternion.Euler(0, 0, (Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg))
         );
         bazookaShellGobj.GetComponent<Rigidbody2D>().velocity = forward * 4;
         var bazookaShell = bazookaShellGobj.GetComponent<BazookaShell>();
         bazookaShell.spawnedBy = this.netId;
         bazookaShell.initialVelocity = forward * 4;
-        Destroy(bazookaShellGobj, 2.0f);
+        Destroy(bazookaShellGobj, 10.0f);
         NetworkServer.Spawn(bazookaShellGobj);
     }
 }

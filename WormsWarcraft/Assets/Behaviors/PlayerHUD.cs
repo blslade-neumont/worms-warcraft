@@ -40,7 +40,7 @@ public class PlayerHUD : NetworkBehaviour
         {
             var avatarGobj = Instantiate(
                 avatarPrefab,
-                new Vector3((float)(rnd.NextDouble() * 4) - 2, (float)(rnd.NextDouble() * 3) - 1.5f, 0),
+                new Vector3((float)(rnd.NextDouble() * 4) - 2, (float)(rnd.NextDouble() * 3) + 2.0f, 0),
                 Quaternion.identity
             );
             NetworkServer.SpawnWithClientAuthority(avatarGobj, this.gameObject);

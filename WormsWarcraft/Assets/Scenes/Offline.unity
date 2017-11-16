@@ -168,7 +168,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 2
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -327,3 +327,45 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &2113559869
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -2.71
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.045898438
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4611643077343498, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: d8f80a506d2b9e14a9cd4df5d68e0650, type: 2}
+  m_IsPrefabParent: 0
