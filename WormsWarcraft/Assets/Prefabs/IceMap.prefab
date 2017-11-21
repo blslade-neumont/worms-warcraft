@@ -35,6 +35,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4611643077343498}
+  - component: {fileID: 114996173116664134}
+  - component: {fileID: 114456629098387368}
   m_Layer: 0
   m_Name: IceMap
   m_TagString: Untagged
@@ -82,7 +84,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1473219177522350}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4611643077343498}
@@ -276,6 +278,56 @@ PolygonCollider2D:
       - {x: 12.639999, y: 0}
       - {x: 12.639999, y: 0.62}
       - {x: 12.4, y: 0.84}
+--- !u!114 &114456629098387368
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295358789357930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c58a65e8c9bb944b9036b8666feaf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialSprite: {fileID: 21300000, guid: 87b66b59201f14c489bb26a94f5605a4, type: 3}
+  initialDebrisSprite: {fileID: 21300000, guid: 7edb4935ce393ff4789ba83900d1a03d,
+    type: 3}
+  initialPhysicsMap: {fileID: 21300000, guid: 7f82724ac3163e944b0a3e36d61975ca, type: 3}
+  spriteRenderer: {fileID: 212225956544216824}
+  debrisRenderer: {fileID: 212789292009159886}
+  physicsColliderRenderer: {fileID: 212641049399012396}
+--- !u!114 &114996173116664134
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1295358789357930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 216
+    i1: 248
+    i2: 10
+    i3: 80
+    i4: 109
+    i5: 43
+    i6: 158
+    i7: 20
+    i8: 169
+    i9: 205
+    i10: 77
+    i11: 245
+    i12: 214
+    i13: 142
+    i14: 6
+    i15: 80
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!212 &212225956544216824
 SpriteRenderer:
   m_ObjectHideFlags: 1

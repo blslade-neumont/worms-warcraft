@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Random = System.Random;
-using System.Linq;
 using System;
 
 public class PlayerHUD : NetworkBehaviour
