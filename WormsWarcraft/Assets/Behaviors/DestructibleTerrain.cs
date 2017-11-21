@@ -83,6 +83,47 @@ public class DestructibleTerrain : NetworkBehaviour
         }
     }
 
+    private List<Explosion> explosionsApplied = new List<Explosion>();
+    public void ApplyExplosion(Explosion explosion)
+    {
+        if (explosionsApplied.Contains(explosion)) return;
+        explosionsApplied.Add(explosion);
+
+        var radius = explosion.radius / 2;
+        var offset = explosion.transform.position - this.transform.position;
+        var offsetx = (int)(offset.x * currentSprite.pixelsPerUnit);
+        var offsety = (int)(offset.y * currentSprite.pixelsPerUnit);
+
+        Debug.Log("Applying explosion at [" + offsetx + ", " + offsety + "] with radius " + radius);
+
+        clearCircle(spriteTex, offsetx, offsety, radius, Color.clear);
+        clearCircle(debrisSpriteTex, offsetx, offsety, radius >= 6 ? radius - 2 : radius, Color.clear);
+        clearCircle(physicsMapTex, offsetx, offsety, radius, Color.clear);
+        updatePhysicsCollider();
+    }
+
+    private void clearCircle(Texture2D tex, int centerx, int centery, float radius, Color color)
+    {
+        var checkLimit = (int)Mathf.Ceil(radius);
+        var limitsq = radius * radius;
+        var minx = Mathf.Max(centerx - checkLimit, 0);
+        var miny = Mathf.Max(centery - checkLimit, 0);
+        var maxx = Mathf.Min(centerx + checkLimit, tex.width);
+        var maxy = Mathf.Min(centery + checkLimit, tex.height);
+        Debug.Log("clearing a circle from [" + minx + ", " + miny + "] to [" + maxx + ", " + maxy + "]");
+        for (var xx = minx; xx < maxx; xx++)
+        {
+            for (var yy = miny; yy < maxy; yy++)
+            {
+                var xdiff = centerx - xx;
+                var ydiff = centery - yy;
+                var distsq = xdiff * xdiff + ydiff * ydiff;
+                if (distsq < limitsq) tex.SetPixel(xx, yy, color);
+            }
+        }
+        tex.Apply();
+    }
+
     private void updatePhysicsCollider()
     {
         var physicsObj = this.physicsColliderRenderer.gameObject;

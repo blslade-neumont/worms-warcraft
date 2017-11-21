@@ -9,6 +9,8 @@ public class BazookaShell : NetworkBehaviour
     [SerializeField] [SyncVar] public NetworkInstanceId spawnedBy;
     [SerializeField] [SyncVar] public Vector3 initialVelocity;
 
+    [SerializeField] public GameObject explosionPrefab;
+
     private new Rigidbody2D rigidbody2D;
     
     public override void OnStartClient()
@@ -26,12 +28,20 @@ public class BazookaShell : NetworkBehaviour
         this.transform.rotation = Quaternion.Euler(0, 0, (Mathf.Atan2(forward.y, forward.x) * Mathf.Rad2Deg));
     }
 
+    private bool hasCreatedExplosion = false;
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (!collision.gameObject.CompareTag("Solid")) return;
+
         if (!this.isServer) return;
 
-        var combat = collision.gameObject.GetComponent<Combat>();
-        if (combat != null) combat.TakeDamage(30, this.gameObject);
-        Destroy(this.gameObject);
+        if (!hasCreatedExplosion)
+        {
+            hasCreatedExplosion = true;
+            var explosion = Instantiate(this.explosionPrefab);
+            explosion.transform.position = this.transform.position;
+            NetworkServer.Spawn(explosion);
+            Destroy(this.gameObject);
+        }
     }
 }

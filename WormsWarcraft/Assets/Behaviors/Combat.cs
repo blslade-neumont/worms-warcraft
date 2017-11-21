@@ -9,9 +9,10 @@ public class Combat : NetworkBehaviour
     [SerializeField] [SyncVar] public float health = 100;
     [SerializeField] public float maxHealth = 100;
 
-    public bool TakeDamage(float damageAmount, object source)
+    public bool TakeDamage(float damageAmount, float pushbackAmount, object source)
     {
         if (!this.isServer) return false;
+        if (pushbackAmount != 0) throw new NotImplementedException("Damage pushback is not yet supported.");
         if (this.health > 0)
         {
             var newHealth = this.health - damageAmount;
