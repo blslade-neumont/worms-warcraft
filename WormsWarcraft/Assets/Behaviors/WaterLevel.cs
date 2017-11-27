@@ -15,7 +15,6 @@ public class WaterLevel : MonoBehaviour
     {
         this.currentAge += Time.deltaTime;
         var lerpAmt = (Mathf.Sin(this.currentAge / wavelength) + 1) / 2;
-        Debug.Log(lerpAmt);
         this.transform.position = Vector3.Lerp(lowPoint.position, highPoint.position, lerpAmt);
     }
 }

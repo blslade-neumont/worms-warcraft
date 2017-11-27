@@ -25,5 +25,12 @@ public class AvatarPointer : NetworkBehaviour
         var currentAvatar = hud.avatars[hud.selectedAvatar];
         if (currentAvatar == null) return;
         this.transform.position = currentAvatar.transform.position;
+
+        if (hud.isLocalPlayer)
+        {
+            var cam = Camera.main;
+            var camController = cam.GetComponent<CameraController>();
+            if (camController != null) camController.currentFollowObject = this.gameObject;
+        }
     }
 }
