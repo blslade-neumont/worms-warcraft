@@ -13,6 +13,7 @@ public class GameController : NetworkBehaviour
     {
         base.OnStartServer();
         var map = Instantiate(mapPrefab);
+        map.transform.position = new Vector3(0, 0, 0);
         NetworkServer.Spawn(map);
     }
 }
