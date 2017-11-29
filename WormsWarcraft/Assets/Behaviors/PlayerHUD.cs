@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using Random = System.Random;
 using System;
 
 public class PlayerHUD : NetworkBehaviour
@@ -23,9 +22,12 @@ public class PlayerHUD : NetworkBehaviour
     {
         this.CmdSpawnAvatars();
     }
+
+    private bool hasSpawnedAvatars = false;
     [Command]
     public void CmdSpawnAvatars()
     {
+        hasSpawnedAvatars = true;
         var avatarPointerGobj = Instantiate(
             avatarPointerPrefab,
             Vector3.zero,
@@ -33,21 +35,33 @@ public class PlayerHUD : NetworkBehaviour
         );
         NetworkServer.SpawnWithClientAuthority(avatarPointerGobj, this.gameObject);
         avatarPointerGobj.GetComponent<AvatarPointer>().hudGobj = this.gameObject;
-
-        var rnd = new Random();
+        
         for (var q = 0; q < 4; q++)
         {
-            var avatarGobj = Instantiate(
-                avatarPrefab,
-                new Vector3((float)(rnd.NextDouble() * 4) - 2, (float)(rnd.NextDouble() * 3) + 2.0f, 0),
-                Quaternion.identity
-            );
+            var spawnPos = this.avatarSpawnPositions != null && this.avatarSpawnPositions.Length > 0 ? this.avatarSpawnPositions[q % this.avatarSpawnPositions.Length].position : Vector3.zero;
+            var avatarGobj = Instantiate(avatarPrefab, spawnPos, Quaternion.identity);
             NetworkServer.SpawnWithClientAuthority(avatarGobj, this.gameObject);
             avatars[q] = avatarGobj.GetComponent<PlayerAvatar>();
             avatars[q].hudGobj = this.gameObject;
             avatars[q].index = q;
         }
         this.CmdSelectAvatar(0, true);
+    }
+
+    private Transform[] avatarSpawnPositions;
+    public void SetSpawnPositions(Transform[] transforms)
+    {
+        if (!this.isServer) throw new NotSupportedException("Don't call PlayerHUD.SetSpawnPositions on the client!");
+
+        this.avatarSpawnPositions = transforms;
+        if (hasSpawnedAvatars && transforms.Length > 0)
+        {
+            for (var q = 0; q < this.avatars.Length; q++)
+            {
+                var avatar = this.avatars[q];
+                avatar.transform.position = transforms[q % transforms.Length].position;
+            }
+        }
     }
 
     void Update()

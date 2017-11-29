@@ -33,14 +33,11 @@ public class CameraController : MonoBehaviour
             posTo = currentFollowObject.transform.position;
         }
 
-        if (posTo != null)
-        {
-            var vertExtent = this.camera.orthographicSize;
-            var horizExtent = (Screen.width / Screen.height) * vertExtent;
-            var minYVal = minY.transform.position.y + (vertExtent / 2);
-            if (posTo.y < minYVal) posTo.y = minYVal;
-            posTo.z = this.transform.position.z;
-            this.transform.position = posTo;
-        }
+        var vertExtent = this.camera.orthographicSize;
+        //var horizExtent = (Screen.width / Screen.height) * vertExtent;
+        var minYVal = minY.transform.position.y + vertExtent;
+        if (posTo.y < minYVal) posTo.y = minYVal;
+        posTo.z = this.transform.position.z;
+        this.transform.position = posTo;
     }
 }

@@ -49,16 +49,15 @@ public class DestructibleTerrain : NetworkBehaviour
     private void cloneSprite(Sprite origSprite, bool isPhysicsMap, out Texture2D newTex, out Sprite newSprite)
     {
         var origTex = origSprite.texture;
-        int width = (int)origSprite.textureRect.width, height = (int)origSprite.textureRect.height;
-        int xmin = (int)origSprite.textureRect.xMin, ymin = (int)origSprite.textureRect.yMin;
+        int width = origTex.width, height = origTex.height;
         newTex = new Texture2D(width, height, TextureFormat.ARGB32, false);
         newTex.wrapMode = origTex.wrapMode;
-        //Debug.Log("Sprite size: [" + width + ", " + height + "], mapped from [" + xmin + ", " + ymin + "]");
-        if (isPhysicsMap) copyTexturesGrayscale(origTex, newTex, 0, 0, width, height, xmin, ymin);
-        copyTextures(origTex, newTex, 0, 0, width, height, xmin, ymin);
+        if (isPhysicsMap) copyTexturesGrayscale(origTex, newTex, 0, 0, width, height);
+        copyTextures(origTex, newTex, 0, 0, width, height);
         newTex.Apply();
         var meshType = origSprite.packed ? SpriteMeshType.Tight : SpriteMeshType.FullRect;
         newSprite = Sprite.Create(newTex, new Rect(0, 0, width, height), origSprite.pivot, origSprite.pixelsPerUnit, 0, meshType);
+        newSprite.name = origSprite.name + " (Clone)";
     }
     private void copyTextures(Texture2D orig, Texture2D newTex, int startx, int starty, int endx, int endy, int offx = 0, int offy = 0)
     {
