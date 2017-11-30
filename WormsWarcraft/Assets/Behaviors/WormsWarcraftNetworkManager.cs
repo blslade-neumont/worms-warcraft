@@ -15,6 +15,7 @@ public class WormsWarcraftNetworkManager : NetworkManager
         var playerGobj = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         var player = playerGobj.GetComponent<PlayerHUD>();
         NetworkServer.AddPlayerForConnection(conn, playerGobj, playerControllerId);
+        player.teamIdx = playerCount;
         player.SetSpawnPositions(playerCount == 0 ? spawnPositions.team1 : spawnPositions.team2);
         playerCount++;
     }

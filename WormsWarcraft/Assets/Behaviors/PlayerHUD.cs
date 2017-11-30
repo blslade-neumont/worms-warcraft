@@ -18,6 +18,8 @@ public class PlayerHUD : NetworkBehaviour
     [SerializeField] public GameObject avatarPointerPrefab;
     [SerializeField] public GameObject avatarPrefab;
 
+    [SerializeField] [SyncVar] public int teamIdx = 0;
+
     public override void OnStartLocalPlayer()
     {
         this.CmdSpawnAvatars();

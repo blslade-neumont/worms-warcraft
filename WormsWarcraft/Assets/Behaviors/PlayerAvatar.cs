@@ -14,6 +14,12 @@ public class PlayerAvatar : NetworkBehaviour
     [SerializeField] [SyncVar] public int index = -1;
     [SerializeField] [SyncVar] public GameObject hudGobj;
 
+    [SerializeField] public SpriteRenderer spriteRenderer;
+    [SerializeField] public Sprite team0Sprite;
+    [SerializeField] public Sprite team1Sprite;
+
+    [SerializeField] public bool isFacingRight = true;
+
     [SerializeField] public bool isAlive = true;
 
     [SerializeField] public GameObject bazookaShellPrefab;
@@ -40,7 +46,10 @@ public class PlayerAvatar : NetworkBehaviour
 
     private void Start()
     {
+        if (this.spriteRenderer == null) this.spriteRenderer = GetComponent<SpriteRenderer>();
+
         if (!this.isServer) return;
+
         combat = GetComponent<Combat>();
         combat.Kill += onKill;
     }
@@ -63,15 +72,26 @@ public class PlayerAvatar : NetworkBehaviour
     void Update()
     {
         if (!this.isAlive) return;
+        
         this.nextFireDelay -= Time.deltaTime;
 
         var hud = this.playerHud;
         if (hud == null) return;
+
+        if (this.spriteRenderer)
+        {
+            var sprite = hud.teamIdx == 0 ? this.team0Sprite : this.team1Sprite;
+            if (sprite != null) this.spriteRenderer.sprite = sprite;
+            this.spriteRenderer.flipX = !this.isFacingRight;
+        }
+
         if (this.index >= 0 && this.index < hud.avatars.Length) hud.avatars[this.index] = this;
         if (!hud.isLocalPlayer || !this.isSelected) return;
 
         var xchange = Input.GetAxis("MoveHorizontal") * Time.deltaTime * this.moveSpeed;
         var ychange = Input.GetAxis("AimVertical") * Time.deltaTime * this.moveSpeed;
+        if (xchange > 0) this.setFacingRight(true);
+        else if (xchange < 0) this.setFacingRight(false);
         this.transform.Translate(xchange, ychange, 0);
 
         var fire = Input.GetButton("Fire");
@@ -81,7 +101,28 @@ public class PlayerAvatar : NetworkBehaviour
             this.nextFireDelay = this.fireDelay;
         }
     }
-    
+
+    private void setFacingRight(bool val)
+    {
+        if (val == this.isFacingRight) return;
+        this.isFacingRight = val;
+        this.CmdSetFacingRight(val, false);
+    }
+    [Command]
+    public void CmdSetFacingRight(bool val, bool ignoreAuthority)
+    {
+        this.isFacingRight = val;
+        this.RpcSetFacingRight(val, ignoreAuthority);
+    }
+    [ClientRpc]
+    public void RpcSetFacingRight(bool val, bool ignoreAuthority)
+    {
+        var hud = this.playerHud;
+        if (!hud) return;
+        if (!ignoreAuthority && hud.isLocalPlayer) return;
+        this.isFacingRight = val;
+    }
+
     [Command]
     public void CmdFire(Vector2 target)
     {

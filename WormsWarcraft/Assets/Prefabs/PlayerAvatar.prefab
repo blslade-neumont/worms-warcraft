@@ -296,6 +296,10 @@ MonoBehaviour:
   projectileStartTransform: {fileID: 4193756396517754}
   index: -1
   hudGobj: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  team0Sprite: {fileID: 21300000, guid: eddd4653a147d8c4e99975ab7a9c1d9f, type: 3}
+  team1Sprite: {fileID: 21300000, guid: 920fe9b50846d6d4b98fe46c2a0e07d7, type: 3}
+  isFacingRight: 1
   isAlive: 1
   bazookaShellPrefab: {fileID: 1432120414971530, guid: 24188c747b8128c4cb551bc0f6f3fed3,
     type: 2}
