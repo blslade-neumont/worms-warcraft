@@ -23,11 +23,11 @@ public class PlayerHUD : NetworkBehaviour
 
     [SerializeField] private AudioClip[] team1WhatClips;
     [SerializeField] private AudioClip[] team2WhatClips;
+    [SerializeField] private GameObject audioSourcePrefab;
 
     public override void OnStartLocalPlayer()
     {
         this.CmdSpawnAvatars();
-        this.playWhatSound();
     }
 
     private bool hasSpawnedAvatars = false;
@@ -114,18 +114,22 @@ public class PlayerHUD : NetworkBehaviour
     [ClientRpc]
     public void RpcSelectAvatar(int selectedAvatar, bool ignoreAuthority)
     {
-        if (!ignoreAuthority && isLocalPlayer) return;
+        if (isLocalPlayer && !ignoreAuthority) return;
         this.selectedAvatar = selectedAvatar;
+        if (isLocalPlayer) this.playWhatSound();
     }
 
     private void playWhatSound()
     {
-        var audioSource = this.avatars[this.selectedAvatar].audioSource;
+        if (!this.audioSourcePrefab) return;
         var clips = this.teamIdx == 0 ? this.team1WhatClips : this.team2WhatClips;
-        if (clips != null && clips.Length > 0 && audioSource != null)
+        if (clips != null && clips.Length > 0)
         {
             var clipIdx = clips.Length > 1 ? new Random().Next(clips.Length) : 0;
             var clip = clips[clipIdx];
+            var gobj = Instantiate(this.audioSourcePrefab, Camera.main.transform);
+            Destroy(gobj, clip.length);
+            var audioSource = gobj.GetComponent<AudioSource>();
             audioSource.clip = clip;
             audioSource.Play();
         }
