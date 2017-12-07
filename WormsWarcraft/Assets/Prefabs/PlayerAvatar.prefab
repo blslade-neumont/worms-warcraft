@@ -58,6 +58,7 @@ GameObject:
   - component: {fileID: 114912494718160778}
   - component: {fileID: 50174196342035416}
   - component: {fileID: 58922791320049520}
+  - component: {fileID: 82890099721930676}
   m_Layer: 0
   m_Name: PlayerAvatar
   m_TagString: Solid
@@ -259,6 +260,86 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.15}
   serializedVersion: 2
   m_Radius: 0.15
+--- !u!82 &82890099721930676
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1336738522674492}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
 --- !u!114 &114369098883686108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -299,6 +380,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   team0Sprite: {fileID: 21300000, guid: eddd4653a147d8c4e99975ab7a9c1d9f, type: 3}
   team1Sprite: {fileID: 21300000, guid: 920fe9b50846d6d4b98fe46c2a0e07d7, type: 3}
+  audioSource: {fileID: 82890099721930676}
   isFacingRight: 1
   isAlive: 1
   bazookaShellPrefab: {fileID: 1432120414971530, guid: 24188c747b8128c4cb551bc0f6f3fed3,

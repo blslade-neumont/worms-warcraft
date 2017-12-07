@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using System;
+using Random = System.Random;
 
 public class PlayerHUD : NetworkBehaviour
 {
@@ -20,9 +21,13 @@ public class PlayerHUD : NetworkBehaviour
 
     [SerializeField] [SyncVar] public int teamIdx = 0;
 
+    [SerializeField] private AudioClip[] team1WhatClips;
+    [SerializeField] private AudioClip[] team2WhatClips;
+
     public override void OnStartLocalPlayer()
     {
         this.CmdSpawnAvatars();
+        this.playWhatSound();
     }
 
     private bool hasSpawnedAvatars = false;
@@ -80,6 +85,7 @@ public class PlayerHUD : NetworkBehaviour
     public bool SelectNextAliveAvatar(int direction = 1)
     {
         if (this.avatars.Length == 0) return false;
+        var prevAvatar = this.selectedAvatar;
         var nextAvatar = this.selectedAvatar;
         if (nextAvatar == -1) nextAvatar = 0;
         var completedIterations = 0;
@@ -92,7 +98,11 @@ public class PlayerHUD : NetworkBehaviour
         }
         while (!this.avatars[nextAvatar].isAlive && completedIterations < this.avatars.Length);
         this.selectedAvatar = nextAvatar;
-        this.CmdSelectAvatar(nextAvatar, false);
+        if (prevAvatar != nextAvatar)
+        {
+            this.CmdSelectAvatar(nextAvatar, false);
+            this.playWhatSound();
+        }
         return this.avatars[this.selectedAvatar].isAlive;
     }
     [Command]
@@ -106,5 +116,18 @@ public class PlayerHUD : NetworkBehaviour
     {
         if (!ignoreAuthority && isLocalPlayer) return;
         this.selectedAvatar = selectedAvatar;
+    }
+
+    private void playWhatSound()
+    {
+        var audioSource = this.avatars[this.selectedAvatar].audioSource;
+        var clips = this.teamIdx == 0 ? this.team1WhatClips : this.team2WhatClips;
+        if (clips != null && clips.Length > 0 && audioSource != null)
+        {
+            var clipIdx = clips.Length > 1 ? new Random().Next(clips.Length) : 0;
+            var clip = clips[clipIdx];
+            audioSource.clip = clip;
+            audioSource.Play();
+        }
     }
 }

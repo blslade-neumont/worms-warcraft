@@ -18,6 +18,8 @@ public class PlayerAvatar : NetworkBehaviour
     [SerializeField] public Sprite team0Sprite;
     [SerializeField] public Sprite team1Sprite;
 
+    [SerializeField] public AudioSource audioSource;
+
     [SerializeField] public bool isFacingRight = true;
 
     [SerializeField] public bool isAlive = true;
@@ -47,6 +49,7 @@ public class PlayerAvatar : NetworkBehaviour
     private void Start()
     {
         if (this.spriteRenderer == null) this.spriteRenderer = GetComponent<SpriteRenderer>();
+        if (this.audioSource == null) this.audioSource = GetComponent<AudioSource>();
 
         if (!this.isServer) return;
 
