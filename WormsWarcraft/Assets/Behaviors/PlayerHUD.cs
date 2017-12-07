@@ -28,6 +28,25 @@ public class PlayerHUD : NetworkBehaviour
     [SerializeField] private AudioClip[] splashClips;
     [SerializeField] private GameObject audioSourcePrefab;
 
+    [SerializeField] private GameObject statusUpdatePrefab;
+    
+    public static string[] DeathStatusMessages = new string[] {
+        "NAME sucks at fighting.",
+        "NAME went towards the light.",
+        "NAME kicked the bucket.",
+        "NAME contributed to helping prove the darwin theory.",
+        "NAME died. Hard.",
+        "NAME regrets not being a pacifist right now.",
+        "NAME is no longer ready to work."
+    };
+
+    public static string[] DrownStatusMessages = new string[] {
+        "NAME should have worn floaties.",
+        "NAME is swimming with the fish.",
+        "NAME went looking for atlantis.",
+        "NAME drowned."
+    };
+
     public override void OnStartLocalPlayer()
     {
         this.CmdSpawnAvatars();
@@ -135,6 +154,7 @@ public class PlayerHUD : NetworkBehaviour
     }
     public void PlaySplashSound(PlayerAvatar avatar)
     {
+        this.CreateStatus(this.getDrownStatusText(avatar));
         if (!this.audioSourcePrefab) return;
         var clips = this.splashClips;
         if (clips != null && clips.Length > 0)
@@ -146,6 +166,7 @@ public class PlayerHUD : NetworkBehaviour
     }
     public void PlayDeathSound(PlayerAvatar avatar)
     {
+        this.CreateStatus(this.getDeathStatusText(avatar));
         if (!this.audioSourcePrefab) return;
         var clips = this.teamIdx == 0 ? this.team1DeathClips : this.team2DeathClips;
         if (clips != null && clips.Length > 0)
@@ -164,5 +185,26 @@ public class PlayerHUD : NetworkBehaviour
         var audioSource = gobj.GetComponent<AudioSource>();
         audioSource.clip = clip;
         audioSource.Play();
+    }
+    
+    private string getDrownStatusText(PlayerAvatar avatar)
+    {
+        var name = avatar.Name;
+        var msg = DrownStatusMessages[new Random().Next(DrownStatusMessages.Length)];
+        return msg.Replace("NAME", name);
+    }
+    private string getDeathStatusText(PlayerAvatar avatar)
+    {
+        var name = avatar.Name;
+        var msg = DeathStatusMessages[new Random().Next(DeathStatusMessages.Length)];
+        return msg.Replace("NAME", name);
+    }
+    public void CreateStatus(string text)
+    {
+        if (this.statusUpdatePrefab == null) return;
+        var canvas = GameObject.Find("Canvas");
+        var gobj = Instantiate(this.statusUpdatePrefab, canvas.transform);
+        var status = gobj.GetComponent<StatusUpdateMessage>();
+        status.Text = text;
     }
 }

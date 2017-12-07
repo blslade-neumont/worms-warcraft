@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using Random = System.Random;
 
 [RequireComponent(typeof(Combat))]
 public class PlayerAvatar : NetworkBehaviour
@@ -26,6 +27,17 @@ public class PlayerAvatar : NetworkBehaviour
 
     [SerializeField] public GameObject bazookaShellPrefab;
 
+    public static string[] OrcNames = new string[] {
+        "Morbash", "Karthurg", "Ogharod", "Durbag", "Snugug", "Slog", "Pargu", "Yar", "Argug", "Quimghig",
+        "Drikdarok", "Kharag", "Olur", "Ogharod", "Farod", "Argug", "Moth", "Turbag", "Filge", "Bugrash",
+        "Stugbu", "Aguk", "Umhra", "Urlgan", "Milug", "Vegum", "Marfu", "Alog", "Urag", "Sornaraugh"
+    };
+    public static string[] HumanNames = new string[] {
+        "Carlo", "Masson", "Ramsey", "Gino", "Malcolm", "Kenton", "Neo", "Isaiah", "Dereck", "Adelfo",
+        "Raymundo", "Jochim", "Linden", "Derrall", "Cheney", "Dolf", "Glenn", "Tyrell", "Philip", "Iram",
+        "Harcourt", "Wesley", "Delray", "Beaman", "Travis", "Regnauld", "Gustavo", "Gunnar", "Alfric", "Lex"
+    };
+
     private Combat combat;
 
     private PlayerHUD playerHud
@@ -43,6 +55,36 @@ public class PlayerAvatar : NetworkBehaviour
         {
             var hud = this.playerHud;
             return hud != null && hud.selectedAvatar != -1 && hud.avatars[hud.selectedAvatar] == this;
+        }
+    }
+
+    private string _name;
+    public string Name
+    {
+        get
+        {
+            if (this._name == null)
+            {
+                var teamIdx = 0;
+                var hud = this.playerHud;
+                if (hud != null) teamIdx = hud.teamIdx;
+                this._name = chooseRandomName(teamIdx);
+            }
+            return this._name;
+        }
+    }
+    private string chooseRandomName(int teamIdx)
+    {
+        switch (teamIdx)
+        {
+        case 0:
+            return OrcNames[new Random().Next(OrcNames.Length)];
+
+        case 1:
+            return HumanNames[new Random().Next(HumanNames.Length)];
+
+        default:
+            goto case 1;
         }
     }
 
