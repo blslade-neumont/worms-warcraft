@@ -23,6 +23,9 @@ public class PlayerHUD : NetworkBehaviour
 
     [SerializeField] private AudioClip[] team1WhatClips;
     [SerializeField] private AudioClip[] team2WhatClips;
+    [SerializeField] private AudioClip[] team1DeathClips;
+    [SerializeField] private AudioClip[] team2DeathClips;
+    [SerializeField] private AudioClip[] splashClips;
     [SerializeField] private GameObject audioSourcePrefab;
 
     public override void OnStartLocalPlayer()
@@ -101,7 +104,7 @@ public class PlayerHUD : NetworkBehaviour
         if (prevAvatar != nextAvatar)
         {
             this.CmdSelectAvatar(nextAvatar, false);
-            this.playWhatSound();
+            this.PlayWhatSound();
         }
         return this.avatars[this.selectedAvatar].isAlive;
     }
@@ -116,10 +119,10 @@ public class PlayerHUD : NetworkBehaviour
     {
         if (isLocalPlayer && !ignoreAuthority) return;
         this.selectedAvatar = selectedAvatar;
-        if (isLocalPlayer) this.playWhatSound();
+        if (isLocalPlayer) this.PlayWhatSound();
     }
 
-    private void playWhatSound()
+    public void PlayWhatSound()
     {
         if (!this.audioSourcePrefab) return;
         var clips = this.teamIdx == 0 ? this.team1WhatClips : this.team2WhatClips;
@@ -127,11 +130,39 @@ public class PlayerHUD : NetworkBehaviour
         {
             var clipIdx = clips.Length > 1 ? new Random().Next(clips.Length) : 0;
             var clip = clips[clipIdx];
-            var gobj = Instantiate(this.audioSourcePrefab, Camera.main.transform);
-            Destroy(gobj, clip.length);
-            var audioSource = gobj.GetComponent<AudioSource>();
-            audioSource.clip = clip;
-            audioSource.Play();
+            this.PlaySound(clip);
         }
+    }
+    public void PlaySplashSound(PlayerAvatar avatar)
+    {
+        if (!this.audioSourcePrefab) return;
+        var clips = this.splashClips;
+        if (clips != null && clips.Length > 0)
+        {
+            var clipIdx = clips.Length > 1 ? new Random().Next(clips.Length) : 0;
+            var clip = clips[clipIdx];
+            this.PlaySound(clip, avatar);
+        }
+    }
+    public void PlayDeathSound(PlayerAvatar avatar)
+    {
+        if (!this.audioSourcePrefab) return;
+        var clips = this.teamIdx == 0 ? this.team1DeathClips : this.team2DeathClips;
+        if (clips != null && clips.Length > 0)
+        {
+            var clipIdx = clips.Length > 1 ? new Random().Next(clips.Length) : 0;
+            var clip = clips[clipIdx];
+            this.PlaySound(clip, avatar);
+        }
+    }
+    public void PlaySound(AudioClip clip, PlayerAvatar avatar = null)
+    {
+        var transform = Camera.main.transform;
+        if (avatar != null) transform = avatar.transform;
+        var gobj = Instantiate(this.audioSourcePrefab, transform);
+        Destroy(gobj, clip.length);
+        var audioSource = gobj.GetComponent<AudioSource>();
+        audioSource.clip = clip;
+        audioSource.Play();
     }
 }

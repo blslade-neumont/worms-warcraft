@@ -21,7 +21,6 @@ GameObject:
   - component: {fileID: 4299741680315470}
   - component: {fileID: 114632451798690574}
   - component: {fileID: 114843479716176766}
-  - component: {fileID: 82874525297989234}
   m_Layer: 0
   m_Name: PlayerHUD
   m_TagString: Untagged
@@ -42,86 +41,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &82874525297989234
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1395998426963146}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: f5083929c85888a4b98759da037d98b7, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0.999176
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!114 &114632451798690574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -183,5 +102,15 @@ MonoBehaviour:
   - {fileID: 8300000, guid: f1cfe409e1692194cb7295d6a608597b, type: 3}
   - {fileID: 8300000, guid: ae06a37e54bd0de41baa574ebb1ae740, type: 3}
   - {fileID: 8300000, guid: 62df059d291314949b5fdaafd5524f31, type: 3}
+  team1DeathClips:
+  - {fileID: 8300000, guid: 607ae3e51906e9c43afc95fd970dde54, type: 3}
+  - {fileID: 8300000, guid: 445e87ce55e4c8c448f4b2ff25a1a5db, type: 3}
+  team2DeathClips:
+  - {fileID: 8300000, guid: fd5353d72632df54d8880161b5c8ba1d, type: 3}
+  - {fileID: 8300000, guid: 46201c736a5458d4bb54ff787c9e22f5, type: 3}
+  - {fileID: 8300000, guid: b6609e9c693a53447a56db8be8b23b2a, type: 3}
+  - {fileID: 8300000, guid: 27d0f1e3fb493c846b6b02dcbda26b84, type: 3}
+  splashClips:
+  - {fileID: 8300000, guid: d07a505bc55b66f4a8f2aacdb976ef1c, type: 3}
   audioSourcePrefab: {fileID: 1921831098705962, guid: 973ebad90dcd7914a96398d909b5f31b,
     type: 2}

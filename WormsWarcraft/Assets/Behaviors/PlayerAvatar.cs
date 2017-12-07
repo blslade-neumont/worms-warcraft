@@ -54,16 +54,23 @@ public class PlayerAvatar : NetworkBehaviour
         combat.Kill += onKill;
     }
 
+    public void CmdDrown()
+    {
+        this.onKill(this, EventArgs.Empty);
+    }
     private void onKill(object sender, EventArgs e)
     {
+        var diedInWater = (!(sender is Combat)) || ((Combat)sender).health > 0;
         this.isAlive = false;
-        this.RpcKill();
+        this.RpcKill(diedInWater);
     }
     [ClientRpc]
-    public void RpcKill()
+    public void RpcKill(bool inWater)
     {
         this.isAlive = false;
         var hud = this.playerHud;
+        if (inWater) hud.PlaySplashSound(this);
+        else hud.PlayDeathSound(this);
         if (hud == null || !hud.isLocalPlayer || !this.isSelected) return;
         hud.SelectNextAliveAvatar();
     }
@@ -94,7 +101,15 @@ public class PlayerAvatar : NetworkBehaviour
         else if (xchange < 0) this.setFacingRight(false);
         this.transform.Translate(xchange, ychange, 0);
 
+        if (this.transform.position.y < 0)
+        {
+            this.isAlive = false;
+            this.CmdDrown();
+            return;
+        }
+
         var fire = Input.GetButton("Fire");
+        //TODO: check if the avatar is on the ground
         if (fire && this.nextFireDelay <= 0)
         {
             this.CmdFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
