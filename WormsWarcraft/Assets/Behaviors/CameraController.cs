@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] public float minZoom = 2f;
     [SerializeField] public float maxZoom = 6f;
+    [SerializeField] public float cameraMoveSpeed = 10;
 
     private new Camera camera;
     private float currentZoom = 3;
@@ -38,6 +39,7 @@ public class CameraController : MonoBehaviour
         var minYVal = minY.transform.position.y + vertExtent;
         if (posTo.y < minYVal) posTo.y = minYVal;
         posTo.z = this.transform.position.z;
-        this.transform.position = posTo;
+
+        this.transform.position = Vector3.Lerp(this.transform.position, posTo, Time.deltaTime * this.cameraMoveSpeed);
     }
 }

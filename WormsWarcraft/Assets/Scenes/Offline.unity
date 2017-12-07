@@ -183,6 +183,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1687131576
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4888869038623910, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 28ccfa55b917f3d4b9c2f454205154e3, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1841436670
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,7 +329,8 @@ MonoBehaviour:
   currentFollowObject: {fileID: 0}
   minY: {fileID: 1576964765}
   minZoom: 2
-  maxZoom: 6
+  maxZoom: 4
+  cameraMoveSpeed: 10
 --- !u!1 &2044274766
 GameObject:
   m_ObjectHideFlags: 0
