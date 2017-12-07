@@ -17,7 +17,9 @@ public class PlayerAvatar : NetworkBehaviour
     [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] public Sprite team0Sprite;
     [SerializeField] public Sprite team1Sprite;
-    
+    [SerializeField] public Sprite team0GraveSprite;
+    [SerializeField] public Sprite team1GraveSprite;
+
     [SerializeField] public bool isFacingRight = true;
 
     [SerializeField] public bool isAlive = true;
@@ -78,19 +80,24 @@ public class PlayerAvatar : NetworkBehaviour
     private float nextFireDelay = .5f;
     void Update()
     {
-        if (!this.isAlive) return;
-        
-        this.nextFireDelay -= Time.deltaTime;
-
         var hud = this.playerHud;
         if (hud == null) return;
 
         if (this.spriteRenderer)
         {
-            var sprite = hud.teamIdx == 0 ? this.team0Sprite : this.team1Sprite;
-            if (sprite != null) this.spriteRenderer.sprite = sprite;
-            this.spriteRenderer.flipX = !this.isFacingRight;
+            Sprite sprite;
+            if (this.isAlive) sprite = hud.teamIdx == 0 ? this.team0Sprite : this.team1Sprite;
+            else sprite = hud.teamIdx == 0 ? this.team0GraveSprite : this.team1GraveSprite;
+            if (sprite != null)
+            {
+                this.spriteRenderer.sprite = sprite;
+                this.spriteRenderer.flipX = this.isAlive && !this.isFacingRight;
+            }
         }
+
+        if (!this.isAlive) return;
+
+        this.nextFireDelay -= Time.deltaTime;
 
         if (this.index >= 0 && this.index < hud.avatars.Length) hud.avatars[this.index] = this;
         if (!hud.isLocalPlayer || !this.isSelected) return;
