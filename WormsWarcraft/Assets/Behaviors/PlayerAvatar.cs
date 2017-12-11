@@ -6,11 +6,15 @@ using UnityEngine.Networking;
 using Random = System.Random;
 
 [RequireComponent(typeof(Combat))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerAvatar : NetworkBehaviour
 {
     [SerializeField] private float moveSpeed = 4;
     [SerializeField] private float fireDelay = .5f;
+    [SerializeField] private float aimDebounce = 1f;
     [SerializeField] public Transform projectileStartTransform;
+    [SerializeField] public Vector2 longJumpVelocity = new Vector2(4, 1.6f);
+    [SerializeField] public Transform[] floorRaycastCheckPoints;
 
     [SerializeField] [SyncVar] public int index = -1;
     [SerializeField] [SyncVar] public GameObject hudGobj;
@@ -26,6 +30,9 @@ public class PlayerAvatar : NetworkBehaviour
     [SerializeField] public bool isAlive = true;
 
     [SerializeField] public GameObject bazookaShellPrefab;
+
+    [SerializeField] public new Rigidbody2D rigidbody2D;
+    [SerializeField] public new Collider2D collider2D;
 
     public static string[] OrcNames = new string[] {
         "Morbash", "Karthurg", "Ogharod", "Durbag", "Snugug", "Slog", "Pargu", "Yar", "Argug", "Quimghig",
@@ -88,16 +95,24 @@ public class PlayerAvatar : NetworkBehaviour
         }
     }
 
+    private RaycastHit2D[] raycastHits;
+    private ContactFilter2D floorContactFilter;
     private void Start()
     {
         if (this.spriteRenderer == null) this.spriteRenderer = GetComponent<SpriteRenderer>();
+        if (this.rigidbody2D == null) this.rigidbody2D = GetComponent<Rigidbody2D>();
+        if (this.collider2D == null) this.collider2D = GetComponent<Collider2D>();
 
         if (!this.isServer) return;
 
         combat = GetComponent<Combat>();
         combat.Kill += onKill;
+
+        this.raycastHits = new RaycastHit2D[8];
+        this.floorContactFilter = new ContactFilter2D().NoFilter();
     }
 
+    [Command]
     public void CmdDrown()
     {
         this.onKill(this, EventArgs.Empty);
@@ -120,6 +135,7 @@ public class PlayerAvatar : NetworkBehaviour
     }
 
     private float nextFireDelay = .5f;
+    private float timeSinceLastMove = 0;
     void Update()
     {
         var hud = this.playerHud;
@@ -144,11 +160,70 @@ public class PlayerAvatar : NetworkBehaviour
         if (this.index >= 0 && this.index < hud.avatars.Length) hud.avatars[this.index] = this;
         if (!hud.isLocalPlayer || !this.isSelected) return;
 
-        var xchange = Input.GetAxis("MoveHorizontal") * Time.deltaTime * this.moveSpeed;
-        var ychange = Input.GetAxis("AimVertical") * Time.deltaTime * this.moveSpeed;
-        if (xchange > 0) this.setFacingRight(true);
-        else if (xchange < 0) this.setFacingRight(false);
-        this.transform.Translate(xchange, ychange, 0);
+        var isFalling = false;
+        var isMoving = false;
+        var isFiring = false;
+
+        var isOnFloor = false;
+        foreach (var checkpoint in this.floorRaycastCheckPoints)
+        {
+            var hitCount = Physics2D.Raycast(checkpoint.position, Vector2.down, this.floorContactFilter, this.raycastHits, .02f);
+            for (int q = 0; q < hitCount; q++)
+            {
+                var hit = this.raycastHits[q];
+                if (hit.collider == this.collider2D) continue;
+                if (hit.distance > .02f) continue;
+                isOnFloor = true;
+                break;
+            }
+            if (isOnFloor) break;
+        }
+        if (!isOnFloor) isFalling = true;
+        if (isFalling)
+        {
+            //Debug.Log("Falling!");
+            //Don't do anything if you're falling...
+        }
+        else
+        {
+            isFiring = Input.GetButton("Fire");
+            if (isFiring)
+            {
+                //Debug.Log("Firing!");
+                //Not implemented...
+            }
+            else
+            {
+                var xchange = Input.GetAxis("MoveHorizontal") * this.moveSpeed;
+                if (xchange != 0) isMoving = true;
+                if (xchange > 0) this.setFacingRight(true);
+                else if (xchange < 0) this.setFacingRight(false);
+                if (isMoving)
+                {
+                    var moveForce = new Vector2(xchange, Math.Abs(xchange) / 10);
+                    this.rigidbody2D.velocity = moveForce;
+                }
+
+                var jumpAxis = Input.GetAxis("Jump");
+                if (!isMoving && jumpAxis > .5f)
+                {
+                    isMoving = true;
+                    var horiz = this.isFacingRight ? 1 : -1;
+                    var jumpVelocity = new Vector2(horiz * this.longJumpVelocity.x, this.longJumpVelocity.y);
+                    this.rigidbody2D.velocity = jumpVelocity;
+                }
+            }
+        }
+
+        if (isFalling || isMoving) this.timeSinceLastMove = 0;
+        else if (Math.Max(Math.Abs(Input.GetAxis("AimVertical")) - .5, 0) != 0) this.timeSinceLastMove = this.aimDebounce;
+        else this.timeSinceLastMove += Time.deltaTime;
+        var showAimTarget = isFiring || (!isFalling && !isMoving && this.timeSinceLastMove >= this.aimDebounce);
+        var isAiming = showAimTarget && !isFiring;
+        //if (isAiming) Debug.Log("Aiming!");
+
+        //var ychange = Input.GetAxis("AimVertical") * Time.deltaTime * this.moveSpeed;
+        //this.transform.Translate(xchange, ychange, 0);
 
         if (this.transform.position.y < 0)
         {
@@ -156,10 +231,8 @@ public class PlayerAvatar : NetworkBehaviour
             this.CmdDrown();
             return;
         }
-
-        var fire = Input.GetButton("Fire");
-        //TODO: check if the avatar is on the ground
-        if (fire && this.nextFireDelay <= 0)
+        
+        if (isFiring && this.nextFireDelay <= 0)
         {
             this.CmdFire(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             this.nextFireDelay = this.fireDelay;
